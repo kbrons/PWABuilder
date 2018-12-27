@@ -3,7 +3,7 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
-  - task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+  - task: SonarSource.sonarcloud.SonarCloudPrepare@1
     displayName: 'Prepare analysis on SonarCloud'
     inputs:
       SonarCloud: SonarCloud
@@ -18,17 +18,14 @@ jobs:
 
       cliProjectName: PWABuilder
 
-      extraProperties: |
-      # Additional properties that will be passed to the scanner, 
-      # Put one key=value per line, example:
-      sonar.exclusions=node_modules/**/*
+      extraProperties: sonar.exclusions=node_modules/**/*
 
   - bash: docker build --target $(targetName) -t manifoldsite . 
     displayName: 'Build docker image'
 
-  - task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
+  - task: SonarSource.sonarcloud.SonarCloudAnalyze@1
     displayName: 'Run Code Analysis'
 
 
-  - task: SonarSource.sonarcloud.38b27399-a642-40af-bb7d-9971f69712e8.SonarCloudPublish@1
+  - task: SonarSource.sonarcloud.SonarCloudPublish@1
     displayName: 'Publish Quality Gate Result'

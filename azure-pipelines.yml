@@ -3,17 +3,11 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
-  - task: SonarQubePreBuild@1
-    displayName: 'Prepare analysis on SonarCloud'
-    inputs:
-      connectedServiceName: SonarCloud-Generic
-      projectKey: kbrons_PWABuilder
-      projectName: PWABuilder
-      projectVersion: 1.0
 
   - bash: docker build --target $(targetName) -t manifoldsite . 
     displayName: 'Build docker image'
-
-  - task: SonarQubePostTest@1
-    continueOnError: true
-    timeoutInMinutes: 2
+  
+  - bash: npm install -g sonarqube-scanner
+    displayName: 'Install sonarqube-scanner from npm'
+  
+  - bash: sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$(sonar-login) -Dsonar.projectKey=kbrons_PWABuilder -Dsonar.sources=.

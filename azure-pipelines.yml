@@ -3,29 +3,18 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
-  - task: SonarSource.sonarcloud.SonarCloudPrepare@1
+  - task: SonarQubePreBuild@1
     displayName: 'Prepare analysis on SonarCloud'
     inputs:
-      SonarCloud: SonarCloud
-
-      organization: 'kbrons-github'
-
-      scannerMode: CLI
-
-      configMode: manual
-
-      cliProjectKey: 'kbrons_PWABuilder'
-
-      cliProjectName: PWABuilder
-
-      extraProperties: sonar.exclusions=node_modules/**/*
+      connectedServiceName: SonarCloud
+      projectKey: kbrons_PWABuilder
+      projectName: PWABuilder
+      projectVersion: 1.0
 
   - bash: docker build --target $(targetName) -t manifoldsite . 
     displayName: 'Build docker image'
 
-  - task: SonarSource.sonarcloud.SonarCloudAnalyze@1
-    displayName: 'Run Code Analysis'
-
-
-  - task: SonarSource.sonarcloud.SonarCloudPublish@1
-    displayName: 'Publish Quality Gate Result'
+  - task: SonarQubePostTest@1
+    continueOnError: true
+    timeoutInMinutes: 2
+    

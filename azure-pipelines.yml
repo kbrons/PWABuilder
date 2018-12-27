@@ -6,7 +6,7 @@ jobs:
   - task: SonarQubePreBuild@1
     displayName: 'Prepare analysis on SonarCloud'
     inputs:
-      connectedServiceName: SonarCloud
+      connectedServiceName: SonarCloud-Generic
       projectKey: kbrons_PWABuilder
       projectName: PWABuilder
       projectVersion: 1.0
@@ -17,4 +17,3 @@ jobs:
   - task: SonarQubePostTest@1
     continueOnError: true
     timeoutInMinutes: 2
-    
